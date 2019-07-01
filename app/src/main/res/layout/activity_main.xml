@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <!--<com.google.android.gms.ads.AdView-->
+        <!--xmlns:ads="http://schemas.android.com/apk/res-auto"-->
+        <!--android:id="@+id/adView"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--ads:adSize="SMART_BANNER"-->
+        <!--ads:adUnitId="ca-app-pub-3940256099942544/6300978111">-->
+    <!--</com.google.android.gms.ads.AdView>-->
+
+    <TextView
+        android:id="@+id/textViewNitcCGPA"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:gravity="center"
+        android:text="NITC-CGPA"
+        android:textColor="#2979FF"
+        android:textSize="40sp"
+        android:textStyle="bold|italic" />
+
+    <Button
+        android:id="@+id/openPicker"
+        android:layout_width="276dp"
+        android:layout_height="151dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/ic_folder_black_24dp"
+        android:hapticFeedbackEnabled="false"
+        android:onClick="onClickUploadGradeCard"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="150dp"
+        android:shadowRadius="20"
+        android:text="Choose Grade card"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="#0C0101"
+        android:textColorHint="#FF0E0E"
+        android:textSize="20sp"
+        android:textStyle="italic"
+        tools:layout_editor_absoluteX="67dp"
+        tools:layout_editor_absoluteY="251dp" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:layout_below="@id/openPicker"
+        android:layout_marginTop="200dp"
+        android:text="NOTE:- . Choose only latest grade card downloaded from DSS"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="526dp" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="163dp"
+        android:layout_height="25dp"
+        android:text="App Version: 1.0.0"
+        tools:layout_editor_absoluteX="124dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        tools:layout_editor_absoluteY="617dp" />
+
+
+
+</RelativeLayout>
