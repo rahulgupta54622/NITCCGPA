@@ -43,12 +43,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-//        MobileAds.initialize(this, "ca-app-pub-3184502253500529~3999694926");
-//
-//        mAdView = findViewById(R.id.adView);
-//        AdRequest adRequest = new AdRequest.Builder().build();
-//        mAdView.loadAd(adRequest);
-
         gradeMap.put('S', 10);
         gradeMap.put('A', 9);
         gradeMap.put('B', 8);

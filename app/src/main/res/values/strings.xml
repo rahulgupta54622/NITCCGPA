@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">NITC-CGPA</string>
+    <string name="app_version_1_0">App Version: 1.0</string>
+    <string name="developed_by_rahul_kumar">Developed by Rahul Kumar</string>
+    <string name="note_choose_only_latest_grade_card_downloaded_from_dss">NOTE:- . Choose only latest grade card downloaded from DSS</string>
+    <string name="choose_grade_card">Choose Grade card</string>
 </resources>
