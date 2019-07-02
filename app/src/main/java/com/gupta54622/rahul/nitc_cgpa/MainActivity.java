@@ -3,10 +3,10 @@ package com.gupta54622.rahul.nitc_cgpa;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -19,6 +19,8 @@ import android.widget.Toast;
 
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.parser.PdfTextExtractor;
+import com.nbsp.materialfilepicker.MaterialFilePicker;
+import com.nbsp.materialfilepicker.ui.FilePickerActivity;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -40,13 +42,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        new MaterialFilePicker()
-//                .withActivity(this)
-//                .withRequestCode(1)
-//                .withFilter(Pattern.compile(".*\\.pdf$")) // Filtering files and directories by file name using regexp
-//                .withFilterDirectories(true) // Set directories filterable (false by default)
-//                .withHiddenFiles(true) // Show hidden files and folders
-//                .start();
 
 //        MobileAds.initialize(this, "ca-app-pub-3184502253500529~3999694926");
 //
@@ -67,38 +62,100 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    void getFile(){
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType("*/*");
-        startActivityForResult(intent, 1);
-
-        textViewNitcCGPA = findViewById(R.id.textViewNitcCGPA);
-    }
-
     public void onClickUploadGradeCard(View view) {
 
-        if(checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-        }else {
-            getFile();
+        checkPermissionsAndOpenFilePicker();
+    }
+
+    private void checkPermissionsAndOpenFilePicker() {
+        String permission = Manifest.permission.READ_EXTERNAL_STORAGE;
+
+        if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
+                showError();
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{permission}, PERMISSIONS_REQUEST_CODE);
+            }
+        } else {
+            openFilePicker();
         }
     }
 
+    private void showError() {
+        Toast.makeText(this, "Allow external storage reading", Toast.LENGTH_SHORT).show();
+    }
+
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String permissions[], @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_CODE: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    openFilePicker();
+                } else {
+                    showError();
+                }
+            }
+        }
+    }
+
+    private void showCGPA(){
+
+        new AlertDialog.Builder(this)
+                .setIcon(android.R.drawable.ic_dialog_info)
+                .setTitle("Your CGPA is")
+                .setMessage(String.valueOf(cgpa))
+                .setPositiveButton("Ok", null)
+                .show();
 
 
-        if(requestCode == 1){
-            if(resultCode == RESULT_OK){
 
-                String path = data.getData().getPath();
-                Uri uri = data.getData();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        MenuInflater menuInflater = new MenuInflater(this);
+        menuInflater.inflate(R.menu.more_options_menu_items, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        super.onOptionsItemSelected(item);
+
+        if (item.getItemId() == R.id.calculation_details) {
+            Intent intent = new Intent(this, ActivityCalculationDetails.class);
+            startActivity(intent);
+        }
+
+        return true;
+    }
+
+    private void openFilePicker() {
+        new MaterialFilePicker()
+                .withActivity(this)
+                .withRequestCode(FILE_PICKER_REQUEST_CODE)
+                .withHiddenFiles(false)
+                .withFilter(Pattern.compile(".*\\.pdf$"))
+                .withTitle("Pick GradeCard")
+                .start();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == FILE_PICKER_REQUEST_CODE && resultCode == RESULT_OK) {
+            String path = data.getStringExtra(FilePickerActivity.RESULT_FILE_PATH);
+
+            if (path != null) {
+                Log.d("Path: ", path);
+                Toast.makeText(this, "Picked file: " + path, Toast.LENGTH_LONG).show();
 
 
-
-                Log.i("PATHP", path);
-                Toast.makeText(this, path, Toast.LENGTH_SHORT).show();
 
                 try {
                     PdfReader pdfReader;
@@ -160,54 +217,7 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(this, "Error in parsing document!!", Toast.LENGTH_SHORT).show();
                     Log.i("READ ERROR:", e.getMessage());
                 }
-
             }
         }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if(requestCode == 1){
-            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-
-                getFile();
-            }
-        }
-    }
-
-    private void showCGPA(){
-
-        new AlertDialog.Builder(this)
-                .setIcon(android.R.drawable.ic_dialog_info)
-                .setTitle("Your CGPA is")
-                .setMessage(String.valueOf(cgpa))
-                .setPositiveButton("Ok", null)
-                .show();
-
-
-
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        MenuInflater menuInflater = new MenuInflater(this);
-        menuInflater.inflate(R.menu.more_options_menu_items, menu);
-
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        super.onOptionsItemSelected(item);
-
-        if (item.getItemId() == R.id.calculation_details) {
-            Intent intent = new Intent(this, ActivityCalculationDetails.class);
-            startActivity(intent);
-        }
-
-        return true;
     }
 }
